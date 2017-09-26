@@ -185,6 +185,7 @@ if [ "$ver" = "$version" ];then
     bundle_arr[${#bundle_arr[@]}]="https://github.com/scrooloose/nerdtree.git"
     bundle_arr[${#bundle_arr[@]}]="https://github.com/ap/vim-css-color.git"
     bundle_arr[${#bundle_arr[@]}]="https://github.com/StanAngeloff/php.vim.git"
+    bundle_arr[${#bundle_arr[@]}]="https://github.com/Xuyuanp/nerdtree-git-plugin.git"
 fi
 
 for url in "${bundle_arr[@]}";do
