@@ -1,15 +1,11 @@
-if has("lua")
-    " echo "aaaa"
-endif
-
 " 如果vim启动太慢，用--startuptime,可以知道为什么
-" vim --startuptime /tmp/vimslow.log
+" vim --startuptime /tmp/vimslow.log test.php
 
 set nocompatible " 不使用vi的兼容模式 必须是第一个，因为可能会影响其他选项
 
-if exists("$VIMRUNTIM/vimrc_example.vim")
-  source $VIMRUNTIM/vimrc_example.vim
-endif
+"if filereadable("$VIMRUNTIME/vimrc_example.vim")
+"  source $VIMRUNTIME/vimrc_example.vim
+"endif
 
 " set noswapfile " 不使用交换文件
 set hidden " 使得不可见的缓冲区保持载入
@@ -78,28 +74,6 @@ autocmd FileType text set noexpandtab "  text文件时不使用空格代替制�
 "syntax enable " 会保持当前的色彩设置
 syntax on " 会用缺省值覆盖色彩设置
 
-if isdirectory($HOME . "/.vim/colors")
-    " 让终端支持256色，否则很多配色不会正常显示，molokai就是其中之一
-    set t_Co=256
-
-    " set cc=100  " colorcolumn 会使刷新变量
-
-    if filereadable($HOME . "/.vim/colors/molokai.vim")
-        colorscheme molokai
-        "let g:molokai_original = 1
-        "let g:rehash256 = 1
-    endif
-    "if filereadable($HOME . "/.vim/colors/solarized.vim")
-        "" set background=light
-        "set background=dark
-        "colorscheme solarized
-        "let g:solarized_termcolors=256
-    "endif
-" color desert     " 设置背景主题
-" color ron     " 设置背景主题
-" color torte     " 设置背景主题
-endif
-
 " set foldmethod=syntax
 " set foldmethod=indent
 set foldmethod=marker " 折叠方式
@@ -150,169 +124,13 @@ if isdirectory($HOME . "/.vim")
         execute pathogen#infect()
     endif
 
-
-    if filereadable($HOME . "/.vim/bundle/syntastic/plugin/syntastic.vim")
-        "set statusline+=%#warningmsg#
-        "set statusline+=%{SyntasticStatuslineFlag()}
-        "set statusline+=%*
-
-        let g:syntastic_php_checkers = ['php']
-
-        " echo syntastic#util#system('echo "$PATH"')
-
-        let g:syntastic_error_symbol = '>>'
-        let g:syntastic_warning_symbol = '>'
-        let g:syntastic_check_on_open = 1
-        let g:syntastic_check_on_wq = 0
-        let g:syntastic_enable_highlighting = 1
-        let g:syntastic_python_checkers = ['pyflakes'] " 使用pyflakes,速度比pylint快
-        let g:syntastic_javascript_checkers = ['jsl', 'jshint']
-        let g:syntastic_html_checkers = ['tidy', 'jshint']
-        " 修改高亮的背景色, 适应主题
-        highlight SyntasticErrorSign guifg=white guibg=black
-        " set guifont=PowerlineSymbols\ for\ Powerline
-
-        " to see error location list
-        let g:syntastic_always_populate_loc_list = 0
-        let g:syntastic_auto_loc_list = 0
-        let g:syntastic_loc_list_height = 5
-
-        function! ToggleErrors()
-            let old_last_winnr = winnr('$')
-            lclose
-            if old_last_winnr == winnr('$')
-                " Nothing was closed, open syntastic error location panel
-                Errors
-            endif
-        endfunction
-
-        nnoremap <Leader>s :call ToggleErrors()<cr>
-        " nnoremap <Leader>sn :lnext<cr>
-        " nnoremap <Leader>sp :lprevious<cr>
+    source /home/chg/work/vimrc_init/myconfig/syntastic.vim
+    if has('lua') && (v:version > 703 || v:version == 703 && has('patch885'))
+        source /home/chg/work/vimrc_init/myconfig/neocomplete.vim
+    elseif v:version > 701
+        source /home/chg/work/vimrc_init/myconfig/neocomplcache.vim
     endif
-
-    if filereadable($HOME . "/.vim/bundle/neocomplete.vim/autoload/neocomplete.vim")
-        set wildmenu " 自动补全，菜单式的补全列表
-        let g:neocomplete#enable_at_startup = 1
-        " php自动补全
-        "autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-        if !exists('g:neocomplete#sources#omni#input_patterns')
-            let g:neocomplete#sources#omni#input_patterns = {}
-        endif
-        let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-
-        let g:neocomplete#sources#omni#input_patterns.php = '\h\w*\|[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-        let g:phpcomplete_relax_static_constraint = 1 " 0
-        let g:phpcomplete_complete_for_unknown_classes = 1
-        let g:phpcomplete_search_tags_for_variables = 1
-        let g:phpcomplete_min_num_of_chars_for_namespace_completion = 1 " 2
-        let g:phpcomplete_parse_docblock_comments = 1
-        let g:phpcomplete_cache_taglists = 1
-        " let g:phpcomplete_enhance_jump_to_definition = 1
-    elseif filereadable($HOME . "/.vim/bundle/neocomplcache.vim/autoload/neocomplcache.vim")
-        set wildmenu " 自动补全，菜单式的补全列表
-        " Disable AutoComplPop.
-        let g:acp_enableAtStartup = 0
-        " Use neocomplcache.
-        let g:neocomplcache_enable_at_startup = 1
-        " Use smartcase.
-        let g:neocomplcache_enable_smart_case = 1
-        " Set minimum syntax keyword length.
-        let g:neocomplcache_min_syntax_length = 3
-        let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-        " Enable heavy features.
-        " Use camel case completion.
-        "let g:neocomplcache_enable_camel_case_completion = 1
-        " Use underbar completion.
-        "let g:neocomplcache_enable_underbar_completion = 1
-
-        " Define dictionary.
-        let g:neocomplcache_dictionary_filetype_lists = {
-            \ 'default' : '',
-            \ 'vimshell' : $HOME . '/.vim/.vimshell_hist',
-            \ 'scheme' : $HOME . '/.vim/.gosh_completions'
-                \ }
-
-        " Define keyword.
-        if !exists('g:neocomplcache_keyword_patterns')
-            let g:neocomplcache_keyword_patterns = {}
-        endif
-        let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-        " Plugin key-mappings.
-        inoremap <expr><C-g> neocomplcache#undo_completion()
-        inoremap <expr><C-l> neocomplcache#complete_common_string()
-
-        " Recommended key-mappings.
-        " <CR>: close popup and save indent.
-        inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-        function! s:my_cr_function()
-            return neocomplcache#smart_close_popup() . "\<CR>"
-            " For no inserting <CR> key.
-            "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-        endfunction
-        " <TAB>: completion.
-        inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-        " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-        inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-        inoremap <expr><C-y> neocomplcache#close_popup()
-        inoremap <expr><C-e> neocomplcache#cancel_popup()
-        " Close popup by <Space>.
-        "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-
-        " For cursor moving in insert mode(Not recommended)
-        "inoremap <expr><Left> neocomplcache#close_popup() . "\<Left>"
-        "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
-        "inoremap <expr><Up> neocomplcache#close_popup() . "\<Up>"
-        "inoremap <expr><Down> neocomplcache#close_popup() . "\<Down>"
-        " Or set this.
-        "let g:neocomplcache_enable_cursor_hold_i = 1
-        " Or set this.
-        "let g:neocomplcache_enable_insert_char_pre = 1
-
-        " AutoComplPop like behavior.
-        "let g:neocomplcache_enable_auto_select = 1
-
-        " Shell like behavior(not recommended).
-        "set completeopt+=longest
-        "let g:neocomplcache_enable_auto_select = 1
-        "let g:neocomplcache_disable_auto_complete = 1
-        "inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-        " Enable omni completion.
-        autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-        autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-        autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-        autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-        autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-        autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-
-        " Enable heavy omni completion.
-        if !exists('g:neocomplcache_omni_patterns')
-            let g:neocomplcache_omni_patterns = {}
-        endif
-        let g:neocomplcache_omni_patterns.php = '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-        let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-        let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-        let g:neocomplcache_omni_patterns.perl = '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-        " Enable heavy omni completion.
-        if !exists('g:neocomplcache_force_omni_patterns')
-            let g:neocomplcache_force_omni_patterns = {}
-        endif
-        let g:neocomplcache_force_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-        let g:neocomplcache_force_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-        let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-
-
-        " For perlomni.vim setting.
-        " https://github.com/c9s/perlomni.vim
-        let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-    endif
+    source /home/chg/work/vimrc_init/myconfig/mycolor.vim
 
     " 状态线 觉得没什么用
     if isdirectory($HOME . "/.vim/bundle/vim-powerline")
