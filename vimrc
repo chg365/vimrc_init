@@ -30,7 +30,7 @@ set history=1000
 "set autoread " 有vim之外的改动时，自动重读文件
 
 set fileformat=unix
-" 
+"
 set fileformats=unix,dos  " ,mac
 
 set nobackup " 不备份文件
@@ -78,18 +78,18 @@ autocmd FileType text set noexpandtab "  text文件时不使用空格代替制�
 "syntax enable " 会保持当前的色彩设置
 syntax on " 会用缺省值覆盖色彩设置
 
-if exists("$HOME/.vim/colors")
+if isdirectory($HOME . "/.vim/colors")
     " 让终端支持256色，否则很多配色不会正常显示，molokai就是其中之一
     set t_Co=256
 
     " set cc=100  " colorcolumn 会使刷新变量
 
-    if exists("$HOME/.vim/colors/molokai.vim")
+    if filereadable($HOME . "/.vim/colors/molokai.vim")
         colorscheme molokai
         "let g:molokai_original = 1
         "let g:rehash256 = 1
     endif
-    "if exists("$HOME/.vim/colors/solarized.vim")
+    "if filereadable($HOME . "/.vim/colors/solarized.vim")
         "" set background=light
         "set background=dark
         "colorscheme solarized
@@ -143,15 +143,15 @@ set matchtime=4 " 匹配括号上停留时间,单位为1/10秒
 set hlsearch   " 搜索的字符串高亮
 set incsearch  " 在输入过程中就显示匹配点
 
-if exists("$HOME/.vim")
+if isdirectory($HOME . "/.vim")
 
     " pathogen
-    if exists("$HOME/.vim/autoload/pathogen.vim")
+    if filereadable($HOME . "/.vim/autoload/pathogen.vim")
         execute pathogen#infect()
     endif
 
 
-    if exists("$HOME/.vim/bundle/syntastic/plugin/syntastic.vim")
+    if filereadable($HOME . "/.vim/bundle/syntastic/plugin/syntastic.vim")
         "set statusline+=%#warningmsg#
         "set statusline+=%{SyntasticStatuslineFlag()}
         "set statusline+=%*
@@ -191,8 +191,131 @@ if exists("$HOME/.vim")
         " nnoremap <Leader>sp :lprevious<cr>
     endif
 
+    if filereadable($HOME . "/.vim/bundle/neocomplete.vim/autoload/neocomplete.vim")
+        set wildmenu " 自动补全，菜单式的补全列表
+        let g:neocomplete#enable_at_startup = 1
+        " php自动补全
+        "autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+        if !exists('g:neocomplete#sources#omni#input_patterns')
+            let g:neocomplete#sources#omni#input_patterns = {}
+        endif
+        let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+
+        let g:neocomplete#sources#omni#input_patterns.php = '\h\w*\|[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
+        let g:phpcomplete_relax_static_constraint = 1 " 0
+        let g:phpcomplete_complete_for_unknown_classes = 1
+        let g:phpcomplete_search_tags_for_variables = 1
+        let g:phpcomplete_min_num_of_chars_for_namespace_completion = 1 " 2
+        let g:phpcomplete_parse_docblock_comments = 1
+        let g:phpcomplete_cache_taglists = 1
+        " let g:phpcomplete_enhance_jump_to_definition = 1
+    elseif filereadable($HOME . "/.vim/bundle/neocomplcache.vim/autoload/neocomplcache.vim")
+        set wildmenu " 自动补全，菜单式的补全列表
+        " Disable AutoComplPop.
+        let g:acp_enableAtStartup = 0
+        " Use neocomplcache.
+        let g:neocomplcache_enable_at_startup = 1
+        " Use smartcase.
+        let g:neocomplcache_enable_smart_case = 1
+        " Set minimum syntax keyword length.
+        let g:neocomplcache_min_syntax_length = 3
+        let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+        " Enable heavy features.
+        " Use camel case completion.
+        "let g:neocomplcache_enable_camel_case_completion = 1
+        " Use underbar completion.
+        "let g:neocomplcache_enable_underbar_completion = 1
+
+        " Define dictionary.
+        let g:neocomplcache_dictionary_filetype_lists = {
+            \ 'default' : '',
+            \ 'vimshell' : $HOME . '/.vim/.vimshell_hist',
+            \ 'scheme' : $HOME . '/.vim/.gosh_completions'
+                \ }
+
+        " Define keyword.
+        if !exists('g:neocomplcache_keyword_patterns')
+            let g:neocomplcache_keyword_patterns = {}
+        endif
+        let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+        " Plugin key-mappings.
+        inoremap <expr><C-g> neocomplcache#undo_completion()
+        inoremap <expr><C-l> neocomplcache#complete_common_string()
+
+        " Recommended key-mappings.
+        " <CR>: close popup and save indent.
+        inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+        function! s:my_cr_function()
+            return neocomplcache#smart_close_popup() . "\<CR>"
+            " For no inserting <CR> key.
+            "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+        endfunction
+        " <TAB>: completion.
+        inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+        " <C-h>, <BS>: close popup and delete backword char.
+        inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+        inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+        inoremap <expr><C-y> neocomplcache#close_popup()
+        inoremap <expr><C-e> neocomplcache#cancel_popup()
+        " Close popup by <Space>.
+        "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+
+        " For cursor moving in insert mode(Not recommended)
+        "inoremap <expr><Left> neocomplcache#close_popup() . "\<Left>"
+        "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
+        "inoremap <expr><Up> neocomplcache#close_popup() . "\<Up>"
+        "inoremap <expr><Down> neocomplcache#close_popup() . "\<Down>"
+        " Or set this.
+        "let g:neocomplcache_enable_cursor_hold_i = 1
+        " Or set this.
+        "let g:neocomplcache_enable_insert_char_pre = 1
+
+        " AutoComplPop like behavior.
+        "let g:neocomplcache_enable_auto_select = 1
+
+        " Shell like behavior(not recommended).
+        "set completeopt+=longest
+        "let g:neocomplcache_enable_auto_select = 1
+        "let g:neocomplcache_disable_auto_complete = 1
+        "inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+        " Enable omni completion.
+        autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+        autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+        autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+        autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+        autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+        autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+
+        " Enable heavy omni completion.
+        if !exists('g:neocomplcache_omni_patterns')
+            let g:neocomplcache_omni_patterns = {}
+        endif
+        let g:neocomplcache_omni_patterns.php = '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+        let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+        let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+        let g:neocomplcache_omni_patterns.perl = '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
+        " Enable heavy omni completion.
+        if !exists('g:neocomplcache_force_omni_patterns')
+            let g:neocomplcache_force_omni_patterns = {}
+        endif
+        let g:neocomplcache_force_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+        let g:neocomplcache_force_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+        let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+
+
+        " For perlomni.vim setting.
+        " https://github.com/c9s/perlomni.vim
+        let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+    endif
+
     " 状态线 觉得没什么用
-    if exists("$HOME/.vim/bundle/vim-powerline")
+    if isdirectory($HOME . "/.vim/bundle/vim-powerline")
         let g:Powerline_loaded = 1 " 既然不使用，就别再加载了
         "let g:Powerline_symbols='unicode' " 需要set laststatus=2
         "let g:Powerline_symbols = 'fancy'
@@ -206,24 +329,3 @@ map <C-n> :NERDTreeToggle<CR>
 " golang
 "let g:go_snippet_engine = "neosnippet"
 
-set wildmenu " 自动补全，菜单式的补全列表
-
-let g:neocomplete#enable_at_startup = 1
-" php自动补全
-"autocmd FileType php set omnifunc=phpcomplete#CompletePHP
-if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.c =
-    \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-
-let g:neocomplete#sources#omni#input_patterns.php =
-    \ '\h\w*\|[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-let g:phpcomplete_relax_static_constraint = 1 " 0
-let g:phpcomplete_complete_for_unknown_classes = 1
-let g:phpcomplete_search_tags_for_variables = 1
-let g:phpcomplete_min_num_of_chars_for_namespace_completion = 1 " 2
-let g:phpcomplete_parse_docblock_comments = 1
-let g:phpcomplete_cache_taglists = 1
-" let g:phpcomplete_enhance_jump_to_definition = 1

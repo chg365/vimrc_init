@@ -96,20 +96,20 @@ function git_pull()
 ###################################################################
 
 cd $VIM_TMP_DIR && \
-   git_clone "https://github.com/tpope/vim-pathogen.git" && \
-   cp vim-pathogen/autoload/pathogen.vim $autoload_dir/ &
+    git_clone "https://github.com/tpope/vim-pathogen.git" && \
+    cp vim-pathogen/autoload/pathogen.vim $autoload_dir/ &
 
 ###################################################################
 #                            颜色方案
 ###################################################################
 
 cd $VIM_TMP_DIR && \
-   git_clone "https://github.com/tomasr/molokai.git" && \
-   cp molokai/colors/molokai.vim $colors_dir/ &
+    git_clone "https://github.com/tomasr/molokai.git" && \
+    cp molokai/colors/molokai.vim $colors_dir/ &
 
 cd $VIM_TMP_DIR && \
-   git_clone "https://github.com/altercation/vim-colors-solarized.git" && \
-   cp vim-colors-solarized/colors/solarized.vim $colors_dir/ &
+    git_clone "https://github.com/altercation/vim-colors-solarized.git" && \
+    cp vim-colors-solarized/colors/solarized.vim $colors_dir/ &
 
 ###################################################################
 #                            bundle
@@ -133,11 +133,11 @@ done
 #nginx
 {
 cd $VIM_TMP_DIR && \
-   git_clone "https://github.com/nginx/nginx.git"
+    git_clone "https://github.com/nginx/nginx.git"
 
 if [ "$?" = "0" ];then
-   rm -rf $bundle_dir/nginx
-   cp -rf nginx/contrib/vim $bundle_dir/nginx
+    rm -rf $bundle_dir/nginx
+    cp -rf nginx/contrib/vim $bundle_dir/nginx
 fi
 } &
 
@@ -169,17 +169,18 @@ use_neo=0;
 if vim --version|grep -q '+lua' ;then
     ver=`echo "$version 7.4"|tr ' ' '\n'|sort -r${sort_V}|head -1`
     if [ "$ver" = "$version" ];then
+        bundle_arr[${#bundle_arr[@]}]="https://github.com/Shougo/neocomplete.vim.git"
         use_neo=1;
     fi
 fi
+ver=`echo "$version 7.1"|tr ' ' '\n'|sort -r${sort_V}|head -1`
 if [ "$use_neo" = "0" ];then
-    bundle_arr[${#bundle_arr[@]}]="https://github.com/Shougo/neocomplcache.vim.git"
+    if [ "$ver" = "$version" ];then
+        bundle_arr[${#bundle_arr[@]}]="https://github.com/Shougo/neocomplcache.vim.git"
+    fi
 fi
 
-ver=`echo "$version 7.1"|tr ' ' '\n'|sort -r${sort_V}|head -1`
 if [ "$ver" = "$version" ];then
-    # 使用neocomplete.vim
-    bundle_arr[${#bundle_arr[@]}]="https://github.com/Shougo/neocomplete.vim.git"
     bundle_arr[${#bundle_arr[@]}]="https://github.com/vim-syntastic/syntastic.git"
     bundle_arr[${#bundle_arr[@]}]="https://github.com/majutsushi/tagbar.git"
     bundle_arr[${#bundle_arr[@]}]="https://github.com/scrooloose/nerdtree.git"
