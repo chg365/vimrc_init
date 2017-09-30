@@ -124,13 +124,13 @@ if isdirectory($HOME . "/.vim")
         execute pathogen#infect()
     endif
 
-    source /home/chg/work/vimrc_init/myconfig/syntastic.vim
+    source $HOME/vimrc_init/myconfig/syntastic.vim
     if has('lua') && (v:version > 703 || v:version == 703 && has('patch885'))
-        source /home/chg/work/vimrc_init/myconfig/neocomplete.vim
+        source $HOME/work/vimrc_init/myconfig/neocomplete.vim
     elseif v:version > 701
-        source /home/chg/work/vimrc_init/myconfig/neocomplcache.vim
+        source $HOME/vimrc_init/myconfig/neocomplcache.vim
     endif
-    source /home/chg/work/vimrc_init/myconfig/mycolor.vim
+    source $HOME/vimrc_init/myconfig/mycolor.vim
 
     " 状态线 觉得没什么用
     if isdirectory($HOME . "/.vim/bundle/vim-powerline")

@@ -144,7 +144,6 @@ fi
 # 下载
 bundle_arr=(
         "https://github.com/ctrlpvim/ctrlp.vim.git"
-        "https://github.com/rizzatti/dash.vim.git"
         "https://github.com/airblade/vim-gitgutter.git"
         "https://github.com/mattn/emmet-vim.git"
         "https://github.com/Yggdroot/indentLine.git"
@@ -163,6 +162,11 @@ bundle_arr=(
         # "https://github.com/gmarik/Vundle.vim.git"
         ##"https://github.com/powerline/powerline.git"
 );
+
+OS_NAME=`uname -s|tr '[A-Z]' '[a-z]'`;
+if [ "$OS_NAME" = 'darwin' ];then
+    bundle_arr[${#bundle_arr[@]}]="https://github.com/rizzatti/dash.vim.git"
+fi
 
 version=`vim --version|head -1|awk '{print $5;}'`;
 use_neo=0;
