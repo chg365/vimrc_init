@@ -1,5 +1,6 @@
 " 如果vim启动太慢，用--startuptime,可以知道为什么
 " vim --startuptime /tmp/vimslow.log test.php
+" echo expand('%:p')
 
 set nocompatible " 不使用vi的兼容模式 必须是第一个，因为可能会影响其他选项
 
@@ -44,6 +45,8 @@ filetype plugin on
 "set smartindent
 set cindent
 
+set relativenumber " 在每行前显示相对于光标所在的行的行号
+set shiftround " 缩进取整到 'shiftwidth' 的倍数
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
@@ -116,6 +119,7 @@ set matchtime=4 " 匹配括号上停留时间,单位为1/10秒
 "set ignorecase " 搜索时忽略大小写
 set hlsearch   " 搜索的字符串高亮
 set incsearch  " 在输入过程中就显示匹配点
+echo $MYVIMRC
 
 if isdirectory($HOME . "/.vim")
 
@@ -124,13 +128,13 @@ if isdirectory($HOME . "/.vim")
         execute pathogen#infect()
     endif
 
-    source $HOME/vimrc_init/myconfig/syntastic.vim
+    source $HOME/work/vimrc_init/myconfig/syntastic.vim
     if has('lua') && (v:version > 703 || v:version == 703 && has('patch885'))
         source $HOME/work/vimrc_init/myconfig/neocomplete.vim
     elseif v:version > 701
-        source $HOME/vimrc_init/myconfig/neocomplcache.vim
+        source $HOME/work/vimrc_init/myconfig/neocomplcache.vim
     endif
-    source $HOME/vimrc_init/myconfig/mycolor.vim
+    source $HOME/work/vimrc_init/myconfig/mycolor.vim
 
     " 状态线 觉得没什么用
     if isdirectory($HOME . "/.vim/bundle/vim-powerline")
@@ -144,6 +148,26 @@ endif
 set autochdir
 map <C-n> :NERDTreeToggle<CR>
 
+" 插入模式下，把单词大写
+imap <c-u> <esc> bgUwe i
+" 正常模式下，大写
+nmap <c-u> ebgUw
+
 " golang
 "let g:go_snippet_engine = "neosnippet"
+
+
+
+" 在默认的注释分隔符之后添加空格
+let g:NERDSpaceDelims = 1
+" 使用紧凑的语法来进行优化的多行注释
+let g:NERDCompactSexyComs = 1
+" 对齐行方向的注释分隔符左对齐而不是跟随代码缩进
+let g:NERDDefaultAlign = 'left'
+" 设置默认使用其替代分隔符的语言
+let g:NERDAltDelims_php = 1
+" 加入自己的自定义格式或覆盖默认
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+" 允许注释和反转空行（在评论区域时很有用）
+let g:NERDCommentEmptyLines = 1
 
