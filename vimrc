@@ -45,7 +45,7 @@ filetype plugin on
 "set smartindent
 set cindent
 
-set relativenumber " 在每行前显示相对于光标所在的行的行号
+"set relativenumber " 在每行前显示相对于光标所在的行的行号
 set shiftround " 缩进取整到 'shiftwidth' 的倍数
 set shiftwidth=4
 set tabstop=4
@@ -84,7 +84,7 @@ set foldmethod=marker " 折叠方式
 " set foldopen=all  " all 时， 当光标在上面后，自动打开折叠
 " set foldclose=all " all 时，当光标不在上面后，自动关闭折叠
 " set foldenable      " 默认值  显示所有打开的折叠
-set foldcolumn=4 " 窗口左边显示一小栏，用来标识折叠, 宽度
+"set foldcolumn=4 " 窗口左边显示一小栏，用来标识折叠, 宽度
 " set foldlevel=50
 
 set mousemodel=popup " 鼠标
